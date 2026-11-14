@@ -9,6 +9,8 @@ r.GetAccount(ctx, addr); r.GetBalance(ctx, addr); r.GetNonce(ctx, addr)
 r.GetTransactionByHash(ctx, hash)                            // Status FINAL | PENDING | UNKNOWN
 r.GetTip(ctx); r.GetBlockByNumber(ctx, 12, true); r.GetBlocks(ctx, 1, 100, false)
 r.ListValidators(ctx, 0, 0); r.GetActiveValidators(ctx); r.GetValidator(ctx, key)
+r.GetToken(ctx, id); r.ListTokens(ctx, 0, 0); r.GetTokenBalances(ctx, addr, 0, 0); r.GetTokenHolders(ctx, id, 0, 0)
+r.GetTransactionsByAddress(ctx, addr, 0, 0); r.SendRawTransaction(ctx, "transfer", body); r.Methods(ctx); r.GetGenesis(ctx)
 r.EstimateFee(ctx, "transfer")                               // Fee, Rule "minimum" | "exact"
 r.Send(ctx, signedTx)
 r.GetInfo(ctx); r.GetChainSpec(ctx); r.GetStats(ctx); r.GetEpoch(ctx)   // raw JSON

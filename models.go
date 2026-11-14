@@ -190,3 +190,50 @@ type FeeEstimate struct {
 	Rule      string `json:"rule"`
 	FeeMarket bool   `json:"feeMarket"`
 }
+
+// Token is an asset token on the chain.
+type Token struct {
+	TokenID     string  `json:"tokenId"`
+	Symbol      string  `json:"symbol"`
+	Name        string  `json:"name"`
+	Decimals    int     `json:"decimals"`
+	Cap         *Amount `json:"cap"`
+	TotalSupply Amount  `json:"totalSupply"`
+	Issuer      string  `json:"issuer"`
+}
+
+// TokenBalance is a token holding of an address.
+type TokenBalance struct {
+	TokenID string `json:"tokenId"`
+	Holder  string `json:"holder"`
+	Balance Amount `json:"balance"`
+}
+
+// GenesisBlock is the first block of the chain.
+type GenesisBlock struct {
+	Timestamp       int64  `json:"timestamp"`
+	Height          int64  `json:"height"`
+	PreviousHash    string `json:"previousHash"`
+	Hash            string `json:"hash"`
+	Signature       string `json:"signature"`
+	PublicKey       string `json:"publicKey"`
+	EpochIndex      int64  `json:"epochIndex"`
+	ValidatorsCount int    `json:"validatorsCount"`
+}
+
+// RPCMethodSpec is one method described by janzeer_methods.
+type RPCMethodSpec struct {
+	Name        string   `json:"name"`
+	Params      []string `json:"params"`
+	Description string   `json:"description"`
+}
+
+// AddressTransactions is janzeer_getTransactionsByAddress (paged historical transactions + pending mempool list).
+type AddressTransactions struct {
+	Total      int64    `json:"total"`
+	List       []TxView `json:"list"`
+	Page       int      `json:"page"`
+	PageSize   int      `json:"pageSize"`
+	TotalPages int      `json:"totalPages"`
+	Pending    []TxView `json:"pending"`
+}
