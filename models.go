@@ -190,3 +190,38 @@ type FeeEstimate struct {
 	Rule      string `json:"rule"`
 	FeeMarket bool   `json:"feeMarket"`
 }
+
+// TokenView is an asset token on the chain.
+type TokenView struct {
+	TokenID     string   `json:"tokenId"`
+	Symbol      string   `json:"symbol"`
+	Name        string   `json:"name"`
+	Decimals    int      `json:"decimals"`
+	Cap         *big.Int `json:"cap"`
+	TotalSupply *big.Int `json:"totalSupply"`
+	Issuer      string   `json:"issuer"`
+}
+
+// TokenBalance is a token holding of an address.
+type TokenBalance struct {
+	TokenID string   `json:"tokenId"`
+	Holder  string   `json:"holder"`
+	Balance *big.Int `json:"balance"`
+}
+
+// RPCMethodSpec is one method described by janzeer_methods.
+type RPCMethodSpec struct {
+	Name        string   `json:"name"`
+	Params      []string `json:"params"`
+	Description string   `json:"description"`
+}
+
+// AddressTransactions is janzeer_getTransactionsByAddress (paged historical transactions + pending mempool list).
+type AddressTransactions struct {
+	Total      int64    `json:"total"`
+	List       []TxView `json:"list"`
+	Page       int      `json:"page"`
+	PageSize   int      `json:"pageSize"`
+	TotalPages int      `json:"totalPages"`
+	Pending    []TxView `json:"pending"`
+}

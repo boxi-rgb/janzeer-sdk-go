@@ -1,10 +1,12 @@
 package rpc_test
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
 	"io"
+	"math/big"
 	"net/http"
 	"net/http/httptest"
 	"sync"
@@ -50,6 +52,22 @@ func answer(r req) string {
 		return ok(`"00112233aabbccdd"`)
 	case "janzeer_unsubscribe":
 		return ok("true")
+	case "janzeer_getToken":
+		return ok(`{"tokenId":"tok_1","symbol":"TOK","name":"Token One","decimals":2,"cap":20000000,"totalSupply":20000000,"issuer":"` + addr + `"}`)
+	case "janzeer_listTokens":
+		return ok(`{"total":1,"list":[{"tokenId":"tok_1","symbol":"TOK","name":"Token One","decimals":2,"cap":20000000,"totalSupply":20000000,"issuer":"` + addr + `"}],"page":0,"pageSize":20,"totalPages":1}`)
+	case "janzeer_getTokenBalances":
+		return ok(`{"total":1,"list":[{"tokenId":"tok_1","holder":"` + addr + `","balance":27500}],"page":0,"pageSize":20,"totalPages":1}`)
+	case "janzeer_getTokenHolders":
+		return ok(`{"total":1,"list":[{"tokenId":"tok_1","holder":"` + addr + `","balance":27500}],"page":0,"pageSize":20,"totalPages":1}`)
+	case "janzeer_getTransactionsByAddress":
+		return ok(`{"total":1,"list":[{"hash":"tx1","status":"FINAL","timestamp":100}],"page":0,"pageSize":20,"totalPages":1,"pending":[{"hash":"tx2","status":"PENDING"}]}`)
+	case "janzeer_sendRawTransaction":
+		return ok(`{"hash":"rawtxhash","status":"PENDING"}`)
+	case "janzeer_methods":
+		return ok(`[{"name":"janzeer_getToken","params":["tokenId"],"description":"Get token by id"}]`)
+	case "janzeer_getGenesis":
+		return ok(`{"specVersion":1,"networkId":"janzeer","createDate":1700000000,"signerPublicKey":"0xgenesis_pk","anchors":[]}`)
 	}
 	return fail(-32602, "bad params", `["address"]`)
 }
@@ -107,6 +125,39 @@ func TestHTTPCallsErrorsAndBatch(t *testing.T) {
 	var nm *janzeer.NonceMismatchError
 	if _, err := r.Send(ctx, tx); !errors.As(err, &nm) || nm.Expected != 1 || nm.RPCCode != janzeer.RPCRejected || nm.Transport != "rpc" {
 		t.Fatalf("send: %v", err)
+	}
+
+	tok, err := r.GetToken(ctx, "tok_1")
+	if err != nil || tok.TokenID != "tok_1" || tok.Symbol != "TOK" || tok.Decimals != 2 || tok.Cap == nil || tok.Cap.Cmp(big.NewInt(20000000)) != 0 || tok.TotalSupply == nil || tok.TotalSupply.Cmp(big.NewInt(20000000)) != 0 {
+		t.Fatalf("token: %+v %v", tok, err)
+	}
+	toks, err := r.ListTokens(ctx, 0, 20)
+	if err != nil || toks.Total != 1 || len(toks.List) != 1 || toks.List[0].TotalSupply == nil || toks.List[0].TotalSupply.Cmp(big.NewInt(20000000)) != 0 {
+		t.Fatalf("list tokens: %+v %v", toks, err)
+	}
+	bals, err := r.GetTokenBalances(ctx, addr, 0, 20)
+	if err != nil || bals.Total != 1 || len(bals.List) != 1 || bals.List[0].Balance == nil || bals.List[0].Balance.Cmp(big.NewInt(27500)) != 0 {
+		t.Fatalf("token balances: %+v %v", bals, err)
+	}
+	holders, err := r.GetTokenHolders(ctx, "tok_1", 0, 20)
+	if err != nil || holders.Total != 1 || len(holders.List) != 1 || holders.List[0].Balance == nil || holders.List[0].Balance.Cmp(big.NewInt(27500)) != 0 {
+		t.Fatalf("token holders: %+v %v", holders, err)
+	}
+	txs, err := r.GetTransactionsByAddress(ctx, addr, 0, 20)
+	if err != nil || txs.Total != 1 || len(txs.Pending) != 1 {
+		t.Fatalf("txs by address: %+v %v", txs, err)
+	}
+	rawRes, err := r.SendRawTransaction(ctx, "transfer", map[string]any{"to": addr})
+	if err != nil || rawRes.Hash != "rawtxhash" || rawRes.Status != "PENDING" {
+		t.Fatalf("send raw tx: %+v %v", rawRes, err)
+	}
+	meths, err := r.ListMethods(ctx)
+	if err != nil || len(meths) != 1 || meths[0].Name != "janzeer_getToken" {
+		t.Fatalf("methods: %+v %v", meths, err)
+	}
+	gen, err := r.GetGenesis(ctx)
+	if err != nil || !bytes.Contains(gen, []byte(`"networkId":"janzeer"`)) {
+		t.Fatalf("genesis: %s %v", string(gen), err)
 	}
 
 	var nonce int64

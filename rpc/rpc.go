@@ -167,6 +167,84 @@ func (m Methods) GetValidator(ctx context.Context, key string) (*janzeer.Validat
 	return &out, m.c.Call(ctx, "janzeer_getValidator", map[string]any{"key": key}, &out)
 }
 
+// GetToken returns one asset token by its ID.
+func (m Methods) GetToken(ctx context.Context, tokenID string) (*janzeer.TokenView, error) {
+	var out janzeer.TokenView
+	return &out, m.c.Call(ctx, "janzeer_getToken", map[string]any{"tokenId": tokenID}, &out)
+}
+
+// ListTokens returns one page of asset tokens (page 0-based, size 1-100; 0 = node default).
+func (m Methods) ListTokens(ctx context.Context, page, size int) (*janzeer.Page[janzeer.TokenView], error) {
+	p := map[string]any{}
+	if page > 0 {
+		p["page"] = page
+	}
+	if size > 0 {
+		p["size"] = size
+	}
+	var out janzeer.Page[janzeer.TokenView]
+	return &out, m.c.Call(ctx, "janzeer_listTokens", p, &out)
+}
+
+// GetTokenBalances returns one page of token holdings for an address.
+func (m Methods) GetTokenBalances(ctx context.Context, address string, page, size int) (*janzeer.Page[janzeer.TokenBalance], error) {
+	p := map[string]any{"address": address}
+	if page > 0 {
+		p["page"] = page
+	}
+	if size > 0 {
+		p["size"] = size
+	}
+	var out janzeer.Page[janzeer.TokenBalance]
+	return &out, m.c.Call(ctx, "janzeer_getTokenBalances", p, &out)
+}
+
+// GetTokenHolders returns one page of token holders for a given token ID.
+func (m Methods) GetTokenHolders(ctx context.Context, tokenID string, page, size int) (*janzeer.Page[janzeer.TokenBalance], error) {
+	p := map[string]any{"tokenId": tokenID}
+	if page > 0 {
+		p["page"] = page
+	}
+	if size > 0 {
+		p["size"] = size
+	}
+	var out janzeer.Page[janzeer.TokenBalance]
+	return &out, m.c.Call(ctx, "janzeer_getTokenHolders", p, &out)
+}
+
+// GetTransactionsByAddress returns historical paged transactions and pending mempool transactions for an address.
+func (m Methods) GetTransactionsByAddress(ctx context.Context, address string, page, size int) (*janzeer.AddressTransactions, error) {
+	p := map[string]any{"address": address}
+	if page > 0 {
+		p["page"] = page
+	}
+	if size > 0 {
+		p["size"] = size
+	}
+	var out janzeer.AddressTransactions
+	return &out, m.c.Call(ctx, "janzeer_getTransactionsByAddress", p, &out)
+}
+
+// SendRawTransaction submits a pre-constructed or custom signed transaction payload.
+func (m Methods) SendRawTransaction(ctx context.Context, txType string, tx any) (*janzeer.SendResult, error) {
+	var out janzeer.SendResult
+	return &out, m.c.Call(ctx, "janzeer_sendRawTransaction", map[string]any{"type": txType, "tx": tx}, &out)
+}
+
+// ListMethods returns the node's JSON-RPC method list and signatures.
+func (m Methods) ListMethods(ctx context.Context) ([]janzeer.RPCMethodSpec, error) {
+	var out []janzeer.RPCMethodSpec
+	err := m.c.Call(ctx, "janzeer_methods", nil, &out)
+	return out, err
+}
+
+// GetGenesis returns the network's public genesis document as raw JSON.
+func (m Methods) GetGenesis(ctx context.Context) (json.RawMessage, error) {
+	var out json.RawMessage
+	err := m.c.Call(ctx, "janzeer_getGenesis", nil, &out)
+	return out, err
+}
+
 // WaitForFinality waits until hash is in a committed block and returns its FINAL view. It chains the node's
 // long-poll in slices of at most 60 s until ctx ends (use a context with a deadline; without one it waits 3 minutes).
 // On expiry it returns a *janzeer.FinalityTimeoutError carrying the last view.

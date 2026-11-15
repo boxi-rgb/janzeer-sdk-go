@@ -3,6 +3,10 @@
 All notable changes to this module. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and the module follows [Semantic Versioning](https://semver.org/).
 
+## Unreleased
+
+- **Typed JSON-RPC wrappers on `rpc.Methods`**: added `GetToken`, `ListTokens`, `GetTokenBalances`, `GetTokenHolders`, `GetTransactionsByAddress`, `SendRawTransaction`, `ListMethods`, and `GetGenesis`.
+
 ## 0.1.5 — 2026-11-13
 
 No API change. `SpecNode` is **0.1.14** (node 0.1.14: supply endpoints `/api/v1/supply`, `/supply/total`, `/supply/circulating`, and circulating supply counted the standard way; API 1.1.0 / protocol 3.4.0 unchanged, rolling upgrade).
