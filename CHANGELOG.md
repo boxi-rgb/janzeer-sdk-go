@@ -3,9 +3,9 @@
 All notable changes to this module. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and the module follows [Semantic Versioning](https://semver.org/).
 
-## Unreleased
+## 0.1.6 — 2026-11-15
 
-- **Typed JSON-RPC wrappers on `rpc.Methods`**: added `GetToken`, `ListTokens`, `GetTokenBalances`, `GetTokenHolders`, `GetTransactionsByAddress`, `SendRawTransaction`, `ListMethods`, and `GetGenesis`.
+- **Typed JSON-RPC wrappers on `rpc.Methods`** for the methods that needed the raw `Call`: `GetToken`, `ListTokens`, `GetTokenBalances`, `GetTokenHolders` (new models `TokenView` and `TokenBalance`; token amounts are integer token units as `*big.Int`, not JNZ), `GetTransactionsByAddress` (`AddressTransactions`: page + pending), `SendRawTransaction`, `ListMethods` (`RPCMethodSpec`) and `GetGenesis` (the genesis document as `json.RawMessage`, like `client.Genesis`). Contributed by @genda-benjamin (#4).
 
 ## 0.1.5 — 2026-11-13
 
