@@ -168,13 +168,13 @@ func (m Methods) GetValidator(ctx context.Context, key string) (*janzeer.Validat
 }
 
 // GetToken returns one asset token by its ID.
-func (m Methods) GetToken(ctx context.Context, tokenID string) (*janzeer.Token, error) {
-	var out janzeer.Token
+func (m Methods) GetToken(ctx context.Context, tokenID string) (*janzeer.TokenView, error) {
+	var out janzeer.TokenView
 	return &out, m.c.Call(ctx, "janzeer_getToken", map[string]any{"tokenId": tokenID}, &out)
 }
 
 // ListTokens returns one page of asset tokens (page 0-based, size 1-100; 0 = node default).
-func (m Methods) ListTokens(ctx context.Context, page, size int) (*janzeer.Page[janzeer.Token], error) {
+func (m Methods) ListTokens(ctx context.Context, page, size int) (*janzeer.Page[janzeer.TokenView], error) {
 	p := map[string]any{}
 	if page > 0 {
 		p["page"] = page
@@ -182,7 +182,7 @@ func (m Methods) ListTokens(ctx context.Context, page, size int) (*janzeer.Page[
 	if size > 0 {
 		p["size"] = size
 	}
-	var out janzeer.Page[janzeer.Token]
+	var out janzeer.Page[janzeer.TokenView]
 	return &out, m.c.Call(ctx, "janzeer_listTokens", p, &out)
 }
 

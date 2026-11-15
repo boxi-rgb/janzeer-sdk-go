@@ -191,8 +191,8 @@ type FeeEstimate struct {
 	FeeMarket bool   `json:"feeMarket"`
 }
 
-// Token is an asset token on the chain.
-type Token struct {
+// TokenView is an asset token on the chain.
+type TokenView struct {
 	TokenID     string   `json:"tokenId"`
 	Symbol      string   `json:"symbol"`
 	Name        string   `json:"name"`
