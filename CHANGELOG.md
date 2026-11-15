@@ -5,7 +5,7 @@ and the module follows [Semantic Versioning](https://semver.org/).
 
 ## Unreleased
 
-- **Typed JSON-RPC wrappers on `rpc.Methods`**: added `GetToken`, `ListTokens`, `GetTokenBalances`, `GetTokenHolders`, `GetTransactionsByAddress`, `SendRawTransaction`, `Methods`, and `GetGenesis`.
+- **Typed JSON-RPC wrappers on `rpc.Methods`**: added `GetToken`, `ListTokens`, `GetTokenBalances`, `GetTokenHolders`, `GetTransactionsByAddress`, `SendRawTransaction`, `ListMethods`, and `GetGenesis`.
 
 ## 0.1.5 — 2026-11-13
 

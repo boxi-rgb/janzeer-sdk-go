@@ -151,7 +151,7 @@ func TestHTTPCallsErrorsAndBatch(t *testing.T) {
 	if err != nil || rawRes.Hash != "rawtxhash" || rawRes.Status != "PENDING" {
 		t.Fatalf("send raw tx: %+v %v", rawRes, err)
 	}
-	meths, err := r.Methods(ctx)
+	meths, err := r.ListMethods(ctx)
 	if err != nil || len(meths) != 1 || meths[0].Name != "janzeer_getToken" {
 		t.Fatalf("methods: %+v %v", meths, err)
 	}

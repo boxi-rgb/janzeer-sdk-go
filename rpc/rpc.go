@@ -231,8 +231,8 @@ func (m Methods) SendRawTransaction(ctx context.Context, txType string, tx any) 
 	return &out, m.c.Call(ctx, "janzeer_sendRawTransaction", map[string]any{"type": txType, "tx": tx}, &out)
 }
 
-// Methods returns the node's JSON-RPC method list and signatures.
-func (m Methods) Methods(ctx context.Context) ([]janzeer.RPCMethodSpec, error) {
+// ListMethods returns the node's JSON-RPC method list and signatures.
+func (m Methods) ListMethods(ctx context.Context) ([]janzeer.RPCMethodSpec, error) {
 	var out []janzeer.RPCMethodSpec
 	err := m.c.Call(ctx, "janzeer_methods", nil, &out)
 	return out, err
