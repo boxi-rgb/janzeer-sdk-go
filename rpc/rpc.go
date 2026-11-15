@@ -238,11 +238,11 @@ func (m Methods) Methods(ctx context.Context) ([]janzeer.RPCMethodSpec, error) {
 	return out, err
 }
 
-// GetGenesis returns the genesis block of the chain.
-func (m Methods) GetGenesis(ctx context.Context) (*janzeer.GenesisBlock, error) {
-	var out janzeer.GenesisBlock
+// GetGenesis returns the network's public genesis document as raw JSON.
+func (m Methods) GetGenesis(ctx context.Context) (json.RawMessage, error) {
+	var out json.RawMessage
 	err := m.c.Call(ctx, "janzeer_getGenesis", nil, &out)
-	return &out, err
+	return out, err
 }
 
 // WaitForFinality waits until hash is in a committed block and returns its FINAL view. It chains the node's

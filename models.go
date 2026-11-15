@@ -193,32 +193,20 @@ type FeeEstimate struct {
 
 // Token is an asset token on the chain.
 type Token struct {
-	TokenID     string  `json:"tokenId"`
-	Symbol      string  `json:"symbol"`
-	Name        string  `json:"name"`
-	Decimals    int     `json:"decimals"`
-	Cap         *Amount `json:"cap"`
-	TotalSupply Amount  `json:"totalSupply"`
-	Issuer      string  `json:"issuer"`
+	TokenID     string   `json:"tokenId"`
+	Symbol      string   `json:"symbol"`
+	Name        string   `json:"name"`
+	Decimals    int      `json:"decimals"`
+	Cap         *big.Int `json:"cap"`
+	TotalSupply *big.Int `json:"totalSupply"`
+	Issuer      string   `json:"issuer"`
 }
 
 // TokenBalance is a token holding of an address.
 type TokenBalance struct {
-	TokenID string `json:"tokenId"`
-	Holder  string `json:"holder"`
-	Balance Amount `json:"balance"`
-}
-
-// GenesisBlock is the first block of the chain.
-type GenesisBlock struct {
-	Timestamp       int64  `json:"timestamp"`
-	Height          int64  `json:"height"`
-	PreviousHash    string `json:"previousHash"`
-	Hash            string `json:"hash"`
-	Signature       string `json:"signature"`
-	PublicKey       string `json:"publicKey"`
-	EpochIndex      int64  `json:"epochIndex"`
-	ValidatorsCount int    `json:"validatorsCount"`
+	TokenID string   `json:"tokenId"`
+	Holder  string   `json:"holder"`
+	Balance *big.Int `json:"balance"`
 }
 
 // RPCMethodSpec is one method described by janzeer_methods.
